@@ -10,6 +10,10 @@ It is built for cases like meetings, interviews, surveillance audio, call record
 
 PeakCue runs analysis directly in the browser with the Web Audio API. Audio files are not uploaded to a remote server.
 
+## Screenshot
+
+![PeakCue screenshot](docs/peakcue-screenshot.png)
+
 ## Highlights
 
 - Upload one or many audio files at once
@@ -132,6 +136,8 @@ Combined overview mode does not simply merge the top peak from each file. It rec
 │   ├── app.js
 │   ├── index.html
 │   └── styles.css
+├── docs
+│   └── peakcue-screenshot.png
 ├── package.json
 ├── README.md
 └── server.js
