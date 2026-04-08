@@ -1,0 +1,12 @@
+{
+  "name": "peakcue",
+  "version": "1.0.0",
+  "description": "Audio peak locator for long recordings",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --check public/app.js"
+  }
+}
