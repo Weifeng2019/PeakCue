@@ -1,134 +1,142 @@
 # PeakCue
 
-PeakCue is a lightweight browser-based tool for finding the loudest moments in long audio recordings.
+PeakCue 是一个轻量的浏览器端音频分析工具，用来快速找出长录音里声音最大的时间点。
 
-It is built for cases like meetings, interviews, surveillance audio, call recordings, podcasts, and field recordings where you want to quickly answer:
+它适合这类场景：
 
-- Where are the loudest moments?
-- Which file has the highest peak?
-- What are the peak timestamps across all uploaded audio?
+- 会议录音回听
+- 访谈录音排查
+- 监控录音筛查
+- 电话录音定位
+- 播客与口播音频检查
+- 外场采样录音快速浏览
 
-PeakCue runs analysis directly in the browser with the Web Audio API. Audio files are not uploaded to a remote server.
+当你拿到一段很长，甚至很多段很长的录音时，PeakCue 可以帮你快速回答这些问题：
 
-## Screenshot
+- 最大声出现在什么时间点？
+- 哪个文件的峰值最高？
+- 全部上传音频里，真正最高的时间点有哪些？
 
-![PeakCue screenshot](docs/peakcue-screenshot.png)
+PeakCue 基于浏览器内的 `Web Audio API` 完成解码、分析和播放，音频不会上传到远程服务器。
 
-## Highlights
+## 页面截图
 
-- Upload one or many audio files at once
-- Analyze each recording independently
-- Switch between per-file view and combined overview
-- See a loudness timeline as an interactive bar chart
-- Filter peaks by relative loudness threshold
-- Filter peaks by minimum dB threshold
-- Jump directly to detected loud moments
-- Stop playback, restart playback, and clear all loaded files
-- View the global loudest moments across all uploaded audio
+![PeakCue 页面截图](docs/peakcue-screenshot.png)
 
-## How It Works
+## 核心能力
 
-PeakCue splits audio into short analysis windows, calculates RMS loudness for each window, converts that into an approximate dBFS value, and detects loud segments based on:
+- 支持一次上传一个或多个音频文件
+- 每段录音可独立分析，也支持全部录音总览
+- 用柱状时间轴直观看到整段录音的音量变化
+- 支持按相对音量阈值筛选高音量片段
+- 支持按最小分贝阈值筛选结果
+- 支持点击高音量时间点直接跳转播放
+- 支持停止播放、回到开头、清空全部
+- 支持查看全部音频范围内的全局最高音量时间点
 
-1. Relative loudness threshold
-2. Minimum dB threshold
-3. Analysis window size
+## 工作原理
 
-In multi-file mode, PeakCue supports two levels of inspection:
+PeakCue 会把音频切分成一段段较短的分析窗口，对每个窗口计算 RMS 音量，并转换成近似的 `dBFS` 数值，再根据以下条件筛出高音量片段：
 
-- Per-file view
-  Shows the loudness timeline and detected peaks for one selected recording
-- Combined overview
-  Treats all completed recordings as one continuous timeline and computes global peaks across the entire uploaded set
+1. 相对音量阈值
+2. 最小分贝阈值
+3. 分析粒度
 
-## Features
+在多音频模式下，PeakCue 提供两种查看方式：
 
-### Multi-file workflow
+- 单文件视图
+  只看某一段录音的音量时间轴和高音量时间点
+- 全部录音总览
+  把所有已分析完成的录音按顺序拼接成一条总时间轴，并重新计算全局峰值，而不是简单拼接每个文件的局部结果
 
-- Upload multiple audio files in one batch
-- Drag and drop audio files into the page
-- See analysis status for each file
-- Switch between uploaded recordings from the sidebar list
+## 功能说明
 
-### Peak detection
+### 多音频工作流
 
-- Relative threshold slider for high-loudness filtering
-- dB threshold slider for minimum loudness filtering
-- Configurable analysis granularity
-- Configurable max result count for per-file views
+- 一次选择多段录音批量分析
+- 支持拖拽音频到页面中
+- 页面会显示每段录音的分析状态
+- 可在录音列表中切换查看单个文件
 
-### Combined overview
+### 高音量定位
 
-- Adds an `All Recordings` view automatically when multiple files are ready
-- Displays a merged loudness chart for all finished recordings
-- Marks file boundaries in the overview chart
-- Shows file labels above overview sections
-- Computes the real global peak set across all uploaded audio
+- 支持调节高音量阈值
+- 支持设置最小分贝下限
+- 支持调节分析粒度
+- 单文件模式下可限制最多显示的高音量时间点数量
 
-### Playback controls
+### 全部录音总览
 
-- Play and pause current recording
-- Restart from the beginning
-- Stop playback immediately
-- Scrub playback position
-- Adjust playback volume
-- Click chart bars or peak cards to jump to exact moments
+- 多段录音可自动生成 `全部录音` 视图
+- 会把所有完成分析的音频绘制到一张总览图中
+- 总览图中会显示不同文件的分隔线
+- 总览图上方可显示文件名标签
+- 总览模式下计算的是全部音频范围内真正的全局最高点
 
-### Privacy
+### 播放控制
 
-- Audio decoding and analysis happen in the browser
-- Files are not uploaded to a backend API
-- No external runtime dependencies are required
+- 播放 / 暂停当前录音
+- 回到开头重新播放
+- 立即停止播放
+- 拖动进度条定位时间
+- 调节播放音量
+- 点击图表或高音量时间点直接跳转
 
-## Interface Overview
+### 隐私与本地处理
 
-### 1. Upload area
+- 音频解码和分析都在浏览器里完成
+- 文件不会上传到后端接口
+- 项目运行依赖极少，适合本地直接使用
 
-- Select multiple recordings
-- Drag recordings into the drop zone
+## 页面区域说明
 
-### 2. Filters
+### 1. 上传区域
 
-- High loudness threshold
-- Minimum dB threshold
-- Analysis window size
-- Max displayed peak count for single-file mode
+- 选择多段录音
+- 拖拽录音到上传区
 
-### 3. Recording list
+### 2. 筛选区
 
-- `All Recordings` combined overview
-- Individual file cards
-- Status indicators: analyzing, ready, failed
+- 高音量阈值
+- 分贝下限
+- 分析粒度
+- 单文件模式下的最大展示数量
 
-### 4. Timeline chart
+### 3. 录音列表
 
-- Interactive loudness bars
-- Threshold line
-- Peak markers
-- File separators in combined overview mode
+- `全部录音` 总览入口
+- 每个单独音频文件卡片
+- 状态提示：分析中、已完成、失败
 
-### 5. Peak panel
+### 4. 音量时间轴
 
-- Lists detected loud timestamps
-- Shows both global and local timestamps in combined mode
-- Lets you jump to the matching file and timestamp
+- 可交互的音量柱状图
+- 阈值参考线
+- 高音量标记区域
+- 全部录音模式下的文件分隔线
 
-## Peak Detection Rules
+### 5. 高音量时间点面板
 
-PeakCue currently uses RMS-based loudness analysis with windowed segmentation.
+- 展示检测到的高音量时间点
+- 总览模式下同时显示全局时间和原文件内时间
+- 点击后可跳转到对应文件和时间点
 
-Detected peaks depend on the following controls:
+## 高音量判定规则
 
-- `High loudness threshold`
-  A relative threshold based on normalized loudness within the analyzed scope
-- `Minimum dB threshold`
-  A minimum approximate dBFS floor that a segment must exceed
-- `Analysis granularity`
-  A smaller window catches sharper peaks; a larger window smooths the result
+当前版本基于 RMS 分窗分析来判断音量强弱。
 
-Combined overview mode does not simply merge the top peak from each file. It recalculates peaks across the entire merged timeline so that the global highest moments are ranked correctly.
+结果会受到以下参数影响：
 
-## Project Structure
+- `高音量阈值`
+  基于当前分析范围内的相对音量比例进行筛选
+- `分贝下限`
+  只有高于该近似 `dBFS` 值的片段才会被保留
+- `分析粒度`
+  窗口越小，越容易抓到短促峰值；窗口越大，结果会更平滑
+
+需要注意的是，`全部录音` 模式并不是简单地拿每个文件的最高点拼在一起，而是会对合并后的整体时间轴重新排序和筛选，因此能更准确地反映真正的全局最高音量位置。
+
+## 项目结构
 
 ```text
 .
@@ -143,25 +151,25 @@ Combined overview mode does not simply merge the top peak from each file. It rec
 └── server.js
 ```
 
-## Local Development
+## 本地运行
 
-### Requirements
+### 环境要求
 
-- Node.js 18+ recommended
+- 建议使用 Node.js 18 及以上版本
 
-### Start the app
+### 启动项目
 
 ```bash
 npm run dev
 ```
 
-Open:
+打开：
 
 ```text
 http://127.0.0.1:3000
 ```
 
-### Available scripts
+### 可用命令
 
 ```bash
 npm run dev
@@ -169,51 +177,51 @@ npm run start
 npm test
 ```
 
-`npm test` currently runs a syntax check for the frontend script.
+当前 `npm test` 主要用于执行前端脚本语法检查。
 
-## Technical Notes
+## 技术说明
 
-- The frontend is plain HTML, CSS, and JavaScript
-- Playback and decoding use the Web Audio API
-- The local server is a minimal static file server built with Node.js native modules
-- No bundler is required
-- No npm dependencies are required
+- 前端使用原生 HTML、CSS、JavaScript 编写
+- 音频播放与解码基于 `Web Audio API`
+- 本地服务是一个使用 Node.js 原生模块实现的静态文件服务器
+- 不依赖打包工具
+- 不依赖额外的 npm 第三方运行时包
 
-## Browser Compatibility
+## 浏览器兼容性
 
-PeakCue is designed for modern browsers with Web Audio API support, including:
+PeakCue 面向支持 `Web Audio API` 的现代浏览器，主要包括：
 
 - Chrome
 - Edge
 - Safari
 
-If an audio file fails to decode, PeakCue will mark that recording as failed and continue processing the rest.
+如果某段音频因为编码格式问题无法解码，PeakCue 会将该录音标记为失败，并继续处理其他录音。
 
-## Limitations
+## 已知限制
 
-- dB values are approximate dBFS values derived from RMS windows, not calibrated real-world SPL measurements
-- Very large batches of long recordings may use significant browser memory
-- Unsupported or uncommon codecs may fail to decode depending on browser support
-- Combined overview playback jumps into the matching original file rather than playing the merged timeline as one continuous rendered track
+- 分贝值是根据 RMS 窗口换算出的近似 `dBFS`，不是现实环境中的校准声压级
+- 批量上传很多超长录音时，浏览器可能占用较多内存
+- 某些少见编码格式是否可解码，取决于浏览器本身的支持情况
+- 在 `全部录音` 模式下，播放会跳转到对应原始文件，而不是把所有文件真正渲染成一条连续音轨来播放
 
-## Suggested Use Cases
+## 适用场景
 
-- Long meeting review
-- Interview cleanup
-- Surveillance and monitoring review
-- Podcast and voice recording scanning
-- Field recording inspection
-- Fast quality control for spoken-word audio
+- 长会议录音回顾
+- 访谈录音重点定位
+- 监控与巡检录音排查
+- 播客或口播内容快速扫描
+- 外场采样音频检查
+- 语音类音频的快速质检
 
-## Roadmap Ideas
+## 后续可扩展方向
 
-- Export detected peak timestamps
-- Hover tooltips on the combined overview chart
-- CSV / JSON export for all peaks
-- Spectrogram mode
-- Silence detection and speech burst detection
-- Peak labeling and bookmarking
+- 导出高音量时间点
+- 总览图悬浮提示
+- 导出全部峰值的 CSV / JSON
+- 频谱图模式
+- 静音区间检测与语音爆发检测
+- 高音量片段标注与书签功能
 
-## License
+## 许可证
 
-No license file has been added yet. Add one before public redistribution if needed.
+当前仓库还没有添加许可证文件；如果后续要公开分发，建议补充合适的许可证。
